@@ -226,16 +226,19 @@ It is hard control the simulator actually. Following tips helped in controlling 
 
  ![configuration](/assets/graphics.PNG)
  
-Here are images from left,center and right cameras:
+Here are images from left,center and right cameras look like:
 
  ![alt text](/assets/images.PNG)
 
-To let the model learn better, I cropped each image. 
+To reduce noise in training dataset, I cropped top 70 pixels and bottom 20 pixels for each image. The images after cropping look like:
+
  ![alt text](/assets/cropped.PNG)
 
-To make the training process go faster, I resized each image. 
+In order to make the model training process runs faster, I resized each image to the shape of (64,64). Resized images look like: 
  ![alt text](/assets/resized.PNG)
 
+In addition, I have vertically flipped each image. This has doubled the amount of training dataset. Followings are comparison of the original and vertically flipped images:
+ ![alt text](/assets/flipped.PNG)
 
 After the collection process, I had 8036 number of data points. I randomly shuffled the data set and put 20% the data into a validation set. In order to make more data to generalize the model, I adopted images from left and right cameras. In addition I flipped each image. Following summary shows the data increment.
 ```
