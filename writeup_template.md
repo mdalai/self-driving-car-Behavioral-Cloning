@@ -95,6 +95,23 @@ My first step was to use a convolution neural network model similar to the LeNet
  * it is computational efficient. We can troubleshoot problem faster.
 
 In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+```
+Epoch 1/7
+38572/38572 [==============================] - 69s - loss: 0.0173 - val_loss: 0.0179
+Epoch 2/7
+38572/38572 [==============================] - 65s - loss: 0.0145 - val_loss: 0.0180
+Epoch 3/7
+38572/38572 [==============================] - 65s - loss: 0.0134 - val_loss: 0.0173
+Epoch 4/7
+38572/38572 [==============================] - 65s - loss: 0.0124 - val_loss: 0.0179
+Epoch 5/7
+38572/38572 [==============================] - 65s - loss: 0.0116 - val_loss: 0.0209
+Epoch 6/7
+38572/38572 [==============================] - 65s - loss: 0.0109 - val_loss: 0.0184
+Epoch 7/7
+38572/38572 [==============================] - 65s - loss: 0.0101 - val_loss: 0.0192
+
+```
 
 To combat the overfitting, I modified the model so that ...
 
