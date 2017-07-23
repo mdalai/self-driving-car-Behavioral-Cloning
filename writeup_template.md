@@ -54,23 +54,46 @@ The model.py file contains the code for training and saving the convolution neur
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+My model consists of a convolution neural networks with RELU activation (model.py lines 96-100).
+```
+model.add(Convolution2D(24,5,5,subsample=(2,2),activation="relu"))
+model.add(Convolution2D(36,5,5,subsample=(2,2),activation="relu"))
+model.add(Convolution2D(48,5,5,subsample=(2,2),activation="relu"))
+model.add(Convolution2D(64,3,3,activation="relu"))
+model.add(Convolution2D(64,3,3,activation="relu"))
+```
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+The data is normalized and Centralize in the model using a Keras lambda layer (code line 94). 
+```
+model.add(Lambda(lambda x: (x / 255.0) - 0.5))
+```
+The image data is cropped in the model using a Keras Cropping2D layer (code line 90). 
+```
+model.add(Cropping2D(cropping=((70,25),(1,1)),input_shape=(160,320,3)))
+```
+The image data is resized to (64,64) in the model using a Keras lambda layer (code line 92). 
+```
+model.add(Lambda(resize_img))
+
+def resize_img(input):
+    from keras.backend import tf as ktf
+    return ktf.image.resize_images(input, (64, 64))
+```
 
 #### 2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
+The model contains dropout layers in order to reduce overfitting (model.py lines 101,104). 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 34-35). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 #### 3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 111).
 
 #### 4. Appropriate training data
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
+Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road.
+
 
 For details about how I created the training data, see the next section. 
 
@@ -89,10 +112,10 @@ The overall strategy for deriving a model architecture:
  * Examine the loss, if it is not decreasing significantly, we need to add more convolutional or dense layers. High loss means the architeture is poor on learning.
  * If training loss is decreasing but validation loss is not, we need to add dropout layers. 
 
-My first step was to use a convolution neural network model similar to the LeNet. I thought this model might be appropriate because:
- * it has few CNN layers which should work better for detecting edges and lanes.
- * it is simple and fast. We can get the idea of which direction to go in next step.
- * it is computational efficient. We can troubleshoot problem faster.
+My first step was to use a convolution neural network model, the NVIDIA Architecture. I thought this model might be appropriate because:
+ * it is industry proven architecture for automonous driving
+ * it has relatively few CNN layers which should work better for detecting edges and lanes.
+ * it is light and fast. It takes less process time. So that the model is able to predict steering on time. 
 
 In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
 ```
@@ -113,23 +136,35 @@ Epoch 7/7
 
 ```
 
-To combat the overfitting, I modified the model so that ...
+To combat the overfitting, I modified the model to add dropout layers. Then the result looks much better.
+```
+Epoch 1/7
+38568/38568 [==============================] - 33s - loss: 0.0245 - val_loss: 0.0181
+Epoch 2/7
+38568/38568 [==============================] - 31s - loss: 0.0186 - val_loss: 0.0168
+Epoch 3/7
+38568/38568 [==============================] - 32s - loss: 0.0174 - val_loss: 0.0161
+Epoch 4/7
+38568/38568 [==============================] - 31s - loss: 0.0166 - val_loss: 0.0157
+Epoch 5/7
+38568/38568 [==============================] - 31s - loss: 0.0159 - val_loss: 0.0155
+Epoch 6/7
+38568/38568 [==============================] - 31s - loss: 0.0153 - val_loss: 0.0154
+Epoch 7/7
+38568/38568 [==============================] - 31s - loss: 0.0147 - val_loss: 0.0153
+```
 
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
+The final step was to run the simulator to see how well the car was driving around track one. The vehicle is able to drive autonomously around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the final architecture:
-
+The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes: 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 64x64   							| 
+| Input         		| (160,320,3) 							| 
+| Cropping2D    		| cropping=((70,25),(1,1))  							| 
+| Lambda(resize_images)   		| output = (64, 64) 							| 
+| Lambda(normalize&Centralize) 	| 				| 
 | Convolution2D  24, 5x5  | subsample=(2,2), activation="relu" 	|
 | Convolution2D  36, 5x5  | subsample=(2,2), activation="relu" 	|
 | Convolution2D  48, 5x5  | subsample=(2,2), activation="relu" 	|
@@ -150,28 +185,24 @@ It is hard control the simulator actually. Following tips helped in controlling 
 
  ![configuration](/assets/graphics.PNG)
  
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+Here are images from left,center and right cameras:
 
-![alt text][image2]
+ ![alt text](/assets/images.PNG)
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+To let the model learn better, I cropped each image. 
+ ![alt text](/assets/cropped.PNG)
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+To make the training process go faster, I resized each image. 
+ ![alt text](/assets/resized.PNG)
 
 
-I finally randomly shuffled the data set and put 20% the data into a validation set. 
+After the collection process, I had 8036 number of data points. I randomly shuffled the data set and put 20% the data into a validation set. In order to make more data to generalize the model, I adopted images from left and right cameras. In addition I flipped each image. Following summary shows the data increment.
+```
+Total Training Samples:  6428
+Total Validation Samples:  1608
+Total Training Samples after preprocessing:  38568
+Total Validation Samples after preprocessing:  9648
+```
+I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used generator to overcome the memory shortage problem.
