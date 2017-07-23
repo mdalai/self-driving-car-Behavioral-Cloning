@@ -129,6 +129,11 @@ Here is a visualization of the final architecture:
 
 #### 3. Creation of the Training Set & Training Process
 
+It is hard control the simulator actually. Following tips helped in controlling the vehicle:
+ * Choose the lowest Screen Resolution and fastest Graphics quality.
+   ![configuration](/assets/graphics.PNG)
+ * Use mouse steer which seems better for me.
+ 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
 ![alt text][image2]
