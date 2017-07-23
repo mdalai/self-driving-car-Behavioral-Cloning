@@ -112,7 +112,7 @@ Here is a visualization of the final architecture:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 160x320x3 RGB image   							| 
+| Input         		| 64x64   							| 
 | Convolution2D  24, 5x5  | subsample=(2,2), activation="relu" 	|
 | Convolution2D  36, 5x5  | subsample=(2,2), activation="relu" 	|
 | Convolution2D  48, 5x5  | subsample=(2,2), activation="relu" 	|
