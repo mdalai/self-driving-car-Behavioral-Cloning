@@ -108,9 +108,24 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+Here is a visualization of the final architecture:
 
-![alt text][image1]
+| Layer         		|     Description	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| Input         		| 160x320x3 RGB image   							| 
+| Convolution2D  24, 5x5  | subsample=(2,2), activation="relu" 	|
+| Convolution2D  36, 5x5  | subsample=(2,2), activation="relu" 	|
+| Convolution2D  48, 5x5  | subsample=(2,2), activation="relu" 	|
+| Convolution2D  64, 3x3  | activation="relu" 	|
+| Convolution2D  64, 3x3  | activation="relu" 	|
+| Dropout      	| 0.3	|
+| Flatten      	| 	|
+| Dense		| 100		|
+| Dropout      	| 0.2	|
+| Dense		| 50		|
+| Dense		| 10		|
+| Dense		| 1		|
+|						|												|
 
 #### 3. Creation of the Training Set & Training Process
 
@@ -136,6 +151,6 @@ Etc ....
 After the collection process, I had X number of data points. I then preprocessed this data by ...
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
+I finally randomly shuffled the data set and put 20% the data into a validation set. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
